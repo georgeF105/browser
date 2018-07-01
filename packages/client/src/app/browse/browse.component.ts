@@ -3,6 +3,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'browse',
@@ -10,6 +11,7 @@ import gql from 'graphql-tag';
   styleUrls: ['./browse.component.css']
 })
 export class BrowseComponent implements OnInit {
+  public folderResponse$: any;
   isHandset: Observable<BreakpointState> = this.breakpointObserver.observe(Breakpoints.Handset);
   constructor(
     private apollo: Apollo,
@@ -17,7 +19,7 @@ export class BrowseComponent implements OnInit {
   ) { }
 
   public ngOnInit (): void {
-    this.apollo.query({
+    this.folderResponse$ = this.apollo.query({
       query: gql`
       {
         folders {
@@ -29,6 +31,6 @@ export class BrowseComponent implements OnInit {
           }
         }
       }`
-    }).subscribe(console.log);
+    }).pipe(tap(response => console.log('response', response)));
   }
 }
