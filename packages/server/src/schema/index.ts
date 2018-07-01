@@ -5,6 +5,7 @@ import {makeExecutableSchema} from 'graphql-schema-tools';
 const modules = [
   require("./modules/some-type"),
   require("./modules/person-type"),
+  require("./modules/folder-type"),
   require("./modules/query"),
 ];
 
