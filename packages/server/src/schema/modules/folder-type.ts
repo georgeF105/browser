@@ -26,19 +26,20 @@ type FolderType {
     id: String
     name: String
     items: [FolderType]
-    type: string
+    type: String
 }
 
 type Query {
-    getFolder(id: String!): FolderType
+    folder(id: String): FolderType
     folders: [FolderType]
 }
 `;
 
 export const resolver = {
   Query: {
-    getFolder(root, args, ctx) {
-      return ctx.findFileItem(args.id);
+    folder(root, args, ctx) {
+      console.log('HERE');
+      return ctx.findFolderItem(args.id);
     },
     folders(root, args, ctx) {
       return ctx.getFolders();

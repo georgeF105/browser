@@ -6,7 +6,7 @@ import * as cors from 'cors';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
 import {persons, findPerson, addPerson} from './data-base/person-database';
-import {getFolders, findFileItem} from './data-base/folder-database';
+import {getFolders, findFolderItem} from './data-base/folder-database';
 
 // Default port or given one.
 export const GRAPHQL_ROUTE = "/graphql";
@@ -53,7 +53,7 @@ export function main(options: IMainOptions) {
       findPerson,
       addPerson,
       getFolders,
-      findFileItem
+      findFolderItem
     },
     schema: Schema,
   }));

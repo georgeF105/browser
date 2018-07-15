@@ -1,4 +1,4 @@
-import { Folder, FolderItem, isFolder } from "../schema/modules/folder-type";
+import { Folder, FolderItem, isFolder, File } from "../schema/modules/folder-type";
 
 interface NormalFolderItem {
   id: string;
@@ -8,8 +8,10 @@ interface NormalFolderItem {
   items?: Array<string>;
 }
 
+const ROOT_FILE = '01';
+
 const folders: Folder = {
-  id: '01',
+  id: ROOT_FILE,
   name: 'rootFolder_01',
   items: [
     {
@@ -19,21 +21,48 @@ const folders: Folder = {
         {
           id: '01-01-01',
           name: 'childFile_01-01-01',
-          type: 'file'
+          type: 'file',
+          items: [
+            {
+              id: '01-01-01-01',
+              name: 'childFile_01-01-01-01',
+              type: 'file'
+            },
+            {
+              id: '01-01-01-02',
+              name: 'childFile_01-01-01-02',
+              type: 'file'
+            }
+          ]
         }
       ],
       type: 'folder'
     },
     {
-      id: '01',
+      id: '01-02',
       name: 'childFile_01-02',
       type: 'file'
+    },
+    {
+      id: '01-03',
+      name: 'childFile_01-03',
+      type: 'file',
+      items: [
+        {
+          id: '01-03-01',
+          name: 'childFile_01-03-01',
+          type: 'file'
+        },
+        {
+          id: '01-03-02',
+          name: 'childFile_01-03-02',
+          type: 'file'
+        }
+      ]
     }
   ],
   type: 'folder'
 };
-
-let normalFolder: Array<NormalFolderItem>;
 
 const getNormalFolderItems = (folder: FolderItem): Array<NormalFolderItem> => {
   if (!isFolder(folder)) {
@@ -58,11 +87,36 @@ const getNormalFolderItems = (folder: FolderItem): Array<NormalFolderItem> => {
 
     normalItems.push(normalItem);
     return normalItems;
-  }, [])
+  }, [{
+    ...folder,
+    parent: 'root',
+    items: folder.items.map(item => item.id)
+  }])
+}
+
+const getFolderAndChildren = (normalItems: Array<NormalFolderItem>, id: string, depth?: number): FolderItem => {
+  const folderItem = normalItems.find(item => item.id === id);
+
+  if (!folderItem) {
+    return null;
+  }
+
+  if (isFolder(folderItem)) {
+    return <Folder>{
+      ...folderItem,
+      items: folderItem.items.map(id => getFolderAndChildren(normalItems, id))
+    };
+  }
+
+  return <File>folderItem;
 }
 
 export const getFolders = (): Array<FolderItem> => folders.items;
-export const findFileItem = (id: string): FolderItem => {
+
+export const findFolderItem = (id: string): FolderItem => {
+  id = id || ROOT_FILE;
+  console.log('finding file, id', id);
   const normalItems = getNormalFolderItems(folders);
-  return normalItems.find(item => item.id === id);
+  console.log('normalItems', normalItems);
+  return getFolderAndChildren(normalItems, id);
 }
