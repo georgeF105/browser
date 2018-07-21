@@ -1,0 +1,19 @@
+{
+  "name": "@browser/types",
+  "version": "1.0.0",
+  "description": "types for browser",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "install": "tsc",
+    "build": "tsc"
+  },
+  "author": "George Francis",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "2.5.3"
+  },
+  "dependencies": {
+    "types": "^0.1.1"
+  }
+}

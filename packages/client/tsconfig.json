@@ -17,5 +17,8 @@
       "dom",
       "esnext.asynciterable"
     ]
-  }
+  },
+  "includes": [
+    "**/@browser/types/**/*.ts"
+  ]
 }

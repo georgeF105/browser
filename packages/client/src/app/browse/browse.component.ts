@@ -7,13 +7,7 @@ import { map, tap, switchMap, startWith, filter } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
-
-export interface Folder {
-  id: string;
-  name: string;
-  type: 'folder';
-  items: Array<Folder>;
-}
+import { Folder, FolderItem, isFolder } from '@browser/types';
 
 const LOADING_FOLDER: Folder = {
   id: null,
@@ -31,7 +25,7 @@ export class BrowseComponent implements OnInit {
   public folderResponse$: Observable<Folder>;
   isHandset: Observable<BreakpointState> = this.breakpointObserver.observe(Breakpoints.Handset);
 
-  public folderTreeControl = new NestedTreeControl<Folder>(folder => this.getFolderChildren(folder));
+  public folderTreeControl = new NestedTreeControl<FolderItem>(folder => this.getFolderChildren(<Folder>folder));
   public folderTreeSource = new MatTreeNestedDataSource();
 
   constructor(
@@ -51,15 +45,18 @@ export class BrowseComponent implements OnInit {
       );
   }
 
+  
   public hasNestedChild = (_: number, folder: Folder) => {
-    return folder.type === null || folder.type === 'folder';
+    const hasNestedChild = isFolder(folder);
+    console.log('hasNestedChild', folder, hasNestedChild);
+    return hasNestedChild;
   };
 
-  private getFolderChildren (folder: Folder): Observable<Folder[]> {
+  private getFolderChildren (folder: Folder): Observable<FolderItem[]> {
     return this.folderTreeControl.expansionModel.onChange.pipe(
       filter(() => this.folderTreeControl.isExpanded(folder)),
       switchMap(() => this.getFolder(folder.id)),
-      map(folder => folder.items)
+      map((folder: Folder) => folder.items)
     );
   }
 
