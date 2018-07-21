@@ -1,15 +1,5 @@
-import { Folder, FolderItem, isFolder, File } from "../schema/modules/folder-type";
-// const fs = require('fs');
+import { FolderItem, isFolder } from "@browser/types";
 import * as fs from 'fs';
-import { resolve } from "dns";
-
-interface NormalFolderItem {
-  id: string;
-  name: string;
-  type: string;
-  // parent: string;
-  items?: Array<string>;
-}
 
 const rootFolder = '/home/george/MEDIA';
 
@@ -35,7 +25,7 @@ const getFolderItemType = (path: string): Promise<string> => {
   })
 }
 
-export const getFolderItem = (path: string, depth = 1): Promise<FolderItem> => {
+export const getFolderItem = (path: string): Promise<FolderItem> => {
   const fullPath = path ? `${rootFolder}/${path}` : rootFolder;
 
   return getFolderItemType (fullPath).then(type => {
@@ -71,7 +61,6 @@ export const getFolderItem = (path: string, depth = 1): Promise<FolderItem> => {
     })
   }).then((fileItem: FolderItem) => {
     if (isFolder(fileItem)) {
-      console.log('getting types for', fileItem);
       return Promise.all(fileItem.items.map(item => getFolderItemType(`${fullPath}/${item.name}`))).then(types => (<FolderItem>{
         ...fileItem,
         items: fileItem.items.map((item, index) => ({

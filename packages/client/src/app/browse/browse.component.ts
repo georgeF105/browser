@@ -48,7 +48,6 @@ export class BrowseComponent implements OnInit {
   
   public hasNestedChild = (_: number, folder: Folder) => {
     const hasNestedChild = isFolder(folder);
-    console.log('hasNestedChild', folder, hasNestedChild);
     return hasNestedChild;
   };
 
