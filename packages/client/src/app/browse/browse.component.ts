@@ -52,7 +52,7 @@ export class BrowseComponent implements OnInit {
   }
 
   public hasNestedChild = (_: number, folder: Folder) => {
-    return folder.items && folder.items.length;
+    return folder.type === null || folder.type === 'folder';
   };
 
   private getFolderChildren (folder: Folder): Observable<Folder[]> {
@@ -69,12 +69,11 @@ export class BrowseComponent implements OnInit {
         folder (id: "${id}") {
           id
           name
+          type
           items {
             id
             name
-            items {
-              id
-            }
+            type
           }
         }
       }`
