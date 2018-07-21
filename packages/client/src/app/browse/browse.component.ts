@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { map, tap, switchMap } from 'rxjs/operators';
+import { map, tap, switchMap, startWith, filter } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -13,6 +13,13 @@ export interface Folder {
   name: string;
   type: 'folder';
   items: Array<Folder>;
+}
+
+const LOADING_FOLDER: Folder = {
+  id: null,
+  name: 'Loading...',
+  type: 'folder',
+  items: []
 }
 
 @Component({
@@ -26,7 +33,7 @@ export class BrowseComponent implements OnInit {
 
   public folderTreeControl = new NestedTreeControl<Folder>(folder => this.getFolderChildren(folder));
   public folderTreeSource = new MatTreeNestedDataSource();
-  
+
   constructor(
     private apollo: Apollo,
     private activatedRoute: ActivatedRoute,
@@ -38,9 +45,9 @@ export class BrowseComponent implements OnInit {
       map(params => params.folder || ''),
       switchMap(id => this.getFolder(id)),
        tap(result => {
-         console.log('result', result);
          this.folderTreeSource.data = [result];
-       })
+       }),
+       startWith(LOADING_FOLDER)
       );
   }
 
@@ -49,7 +56,9 @@ export class BrowseComponent implements OnInit {
   };
 
   private getFolderChildren (folder: Folder): Observable<Folder[]> {
-    return this.getFolder(folder.id).pipe(
+    return this.folderTreeControl.expansionModel.onChange.pipe(
+      filter(() => this.folderTreeControl.isExpanded(folder)),
+      switchMap(() => this.getFolder(folder.id)),
       map(folder => folder.items)
     );
   }
@@ -69,8 +78,10 @@ export class BrowseComponent implements OnInit {
           }
         }
       }`
-    }).pipe(
-      map(result => result.data.folder)
-    );
+    }).pipe(map(result => result.data.folder));
+  }
+
+  public trackByFolderId (folder: Folder): string {
+    return folder.id;
   }
 }

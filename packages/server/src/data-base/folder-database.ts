@@ -26,7 +26,21 @@ const folders: Folder = {
             {
               id: '01-01-01-01',
               name: 'childFile_01-01-01-01',
-              type: 'file'
+              type: 'file',
+              items: [
+                {
+                  id: '01-01-01-01-01',
+                  name: 'childFile_01-01-01-01-01',
+                  type: 'file',
+                  items: [
+                    {
+                      id: '01-01-01-01-01-01',
+                      name: 'childFile_01-01-01-01-01-01',
+                      type: 'file'
+                    }
+                  ]
+                }
+              ]
             },
             {
               id: '01-01-01-02',

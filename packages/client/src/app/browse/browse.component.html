@@ -32,11 +32,11 @@
       <span>Browse</span>
     </mat-toolbar>
 
-  <h1>HI</h1>
-
   <mat-tree
+    #folderTree
     [dataSource]="folderTreeSource"
     [treeControl]="folderTreeControl"
+    [trackBy]="trackByFolderId"
     class="folder-tree">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
       <li class="mat-tree-node">
