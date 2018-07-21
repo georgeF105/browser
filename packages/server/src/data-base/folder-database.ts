@@ -37,7 +37,6 @@ const getFolderItemType = (path: string): Promise<string> => {
 
 export const getFolderItem = (path: string, depth = 1): Promise<FolderItem> => {
   const fullPath = path ? `${rootFolder}/${path}` : rootFolder;
-  console.log('fullPath', fullPath);
 
   return getFolderItemType (fullPath).then(type => {
     return new Promise((resolve, reject) => {
@@ -82,8 +81,5 @@ export const getFolderItem = (path: string, depth = 1): Promise<FolderItem> => {
       }));
     }
     return fileItem;
-  }).then((result: FolderItem) => {
-    console.log('result', result);
-    return result;
   });
 }
