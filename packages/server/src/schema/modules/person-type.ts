@@ -29,11 +29,11 @@ export const resolver = {
     },
     persons(root, args, ctx) {
       return ctx.persons;
-    },
+    }
   },
   Mutation: {
     addPerson(root, args, ctx) {
       return ctx.addPerson(ctx.persons, {id: Math.random().toString(16).substr(2), name: args.name, sex: args.sex});
-    },
-  },
+    }
+  }
 };

@@ -9,8 +9,8 @@ import {persons, findPerson, addPerson} from './data-base/person-database';
 import {getFolderItem} from './data-base/folder-database';
 
 // Default port or given one.
-export const GRAPHQL_ROUTE = "/graphql";
-export const GRAPHIQL_ROUTE = "/graphiql";
+export const GRAPHQL_ROUTE = '/graphql';
+export const GRAPHIQL_ROUTE = '/graphiql';
 
 interface IMainOptions {
   enableCors: boolean;
@@ -30,11 +30,12 @@ function verbosePrint(port, enableGraphiql) {
 
 export class TestConnector {
   public get testString() {
-    return "it works from connector as well!";
+    return 'it works from connector as well!';
   }
 }
 
 export function main(options: IMainOptions) {
+  console.log('HERE');
   let app = express();
 
   app.use(helmet());
@@ -54,7 +55,7 @@ export function main(options: IMainOptions) {
       addPerson,
       findFolderItem: getFolderItem
     },
-    schema: Schema,
+    schema: Schema
   }));
 
   if (true === options.enableGraphiql) {
@@ -69,7 +70,7 @@ export function main(options: IMainOptions) {
       }
 
       resolve(server);
-    }).on("error", (err: Error) => {
+    }).on('error', (err: Error) => {
       reject(err);
     });
   });
@@ -80,18 +81,18 @@ if (require.main === module) {
   const PORT = parseInt(process.env.PORT || '3000', 10);
 
   // Either to export GraphiQL (Debug Interface) or not.
-  const NODE_ENV = process.env.NODE_ENV !== "production" ? "dev" : "production";
+  const NODE_ENV = process.env.NODE_ENV !== 'production' ? 'dev' : 'production';
 
-  const EXPORT_GRAPHIQL = NODE_ENV !== "production";
+  const EXPORT_GRAPHIQL = NODE_ENV !== 'production';
 
   // Enable cors (cross-origin HTTP request) or not.
-  const ENABLE_CORS = NODE_ENV !== "production";
+  const ENABLE_CORS = NODE_ENV !== 'production';
 
   main({
     enableCors: ENABLE_CORS,
     enableGraphiql: EXPORT_GRAPHIQL,
     env: NODE_ENV,
     port: PORT,
-    verbose: true,
+    verbose: true
   });
 }

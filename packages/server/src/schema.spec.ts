@@ -6,26 +6,26 @@ import {persons, findPerson, addPerson} from './data-base/person-database';
 function assertNoError(res) {
   if (res.errors) {
     console.error(res.errors);
-    expect(typeof res.errors).toBe("undefined");
+    expect(typeof res.errors).toBe('undefined');
   }
 }
 
-describe("Schema", () => {
-  it("should export valid schema", () => {
+describe('Schema', () => {
+  it('should export valid schema', () => {
     let query = Schema.getQueryType();
-    expect(typeof query).toBe("object");
+    expect(typeof query).toBe('object');
 
     let fields: any = query.getFields();
-    expect(typeof fields).toBe("object");
+    expect(typeof fields).toBe('object');
   });
 
-  it("should resolve testString correctly", () => {
+  it('should resolve testString correctly', () => {
     let testQuery = `{
             testString
         }`;
 
     let expectedResponse = {
-      testString: "it Works!",
+      testString: 'it Works!'
     };
 
     return graphql(Schema, testQuery, undefined, {}).then((res) => {
@@ -34,7 +34,7 @@ describe("Schema", () => {
     });
   });
 
-  it("should resolve someType correctly", () => {
+  it('should resolve someType correctly', () => {
     let testQuery = `{
             someType {
                 testFloat,
@@ -49,7 +49,7 @@ describe("Schema", () => {
     });
   });
 
-  it("should resolve testStringConnector correctly", () => {
+  it('should resolve testStringConnector correctly', () => {
     let testQuery = `{
             testStringConnector
         }`;
@@ -61,7 +61,7 @@ describe("Schema", () => {
     });
   });
 
-  it("should list all persons", () => {
+  it('should list all persons', () => {
     let testQuery = `{
              persons {
                 name
@@ -75,7 +75,7 @@ describe("Schema", () => {
     });
   });
 
-  it("should find a person correctly", () => {
+  it('should find a person correctly', () => {
     let testQuery = `{
              getPerson(id: "3"){
                 name
@@ -89,7 +89,7 @@ describe("Schema", () => {
     });
   });
 
-  it("should find a person and drill down matches (2 levels) correctly", () => {
+  it('should find a person and drill down matches (2 levels) correctly', () => {
     let testQuery = `{
              getPerson(id: "3"){
                 name
@@ -109,7 +109,7 @@ describe("Schema", () => {
     });
   });
 
-  it("should add a person and retrieve it correctly", () => {
+  it('should add a person and retrieve it correctly', () => {
     let testQuery = `mutation {
             addPerson(name:"kuku", sex: "male") {
                 id
@@ -127,7 +127,7 @@ describe("Schema", () => {
                 }`;
       return graphql(Schema, testVerifyQuery, undefined, {persons, findPerson, addPerson}).then((res) => {
         expect(res.data.getPerson.id).toEqual(newId);
-        expect(res.data.getPerson.name).toEqual("kuku");
+        expect(res.data.getPerson.name).toEqual('kuku');
       });
     });
   });

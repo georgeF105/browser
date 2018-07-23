@@ -1,4 +1,4 @@
-import { FolderItem, isFolder } from "@browser/types";
+import { FolderItem, isFolder } from '@browser/types';
 import * as fs from 'fs';
 
 const rootFolder = '/home/george/MEDIA';
@@ -15,15 +15,15 @@ const getFolderItemType = (path: string): Promise<string> => {
       if (err) {
         return reject(err);
       }
-      
+
       if (stat.isDirectory()) {
         return resolve ('folder');
       }
 
       return resolve('file');
-    })
-  })
-}
+    });
+  });
+};
 
 export const getFolderItem = (path: string): Promise<FolderItem> => {
   const fullPath = path ? `${rootFolder}/${path}` : rootFolder;
@@ -58,7 +58,7 @@ export const getFolderItem = (path: string): Promise<FolderItem> => {
         name: path || 'root',
         type
       });
-    })
+    });
   }).then((fileItem: FolderItem) => {
     if (isFolder(fileItem)) {
       return Promise.all(fileItem.items.map(item => getFolderItemType(`${fullPath}/${item.name}`))).then(types => (<FolderItem>{
@@ -71,4 +71,4 @@ export const getFolderItem = (path: string): Promise<FolderItem> => {
     }
     return fileItem;
   });
-}
+};

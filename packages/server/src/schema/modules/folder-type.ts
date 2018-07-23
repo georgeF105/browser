@@ -20,6 +20,6 @@ export const resolver = {
     },
     folders(root, args, ctx) {
       return ctx.getFolders();
-    },
+    }
   }
 };

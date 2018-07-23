@@ -9,10 +9,10 @@ type Query {
 export const resolver = {
   Query: {
     testString() {
-      return "it Works!";
+      return 'it Works!';
     },
     testStringConnector(root, args, ctx) {
       return ctx.testConnector.testString;
-    },
-  },
+    }
+  }
 };

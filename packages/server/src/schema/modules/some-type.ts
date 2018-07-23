@@ -13,12 +13,12 @@ type Query {
 export const resolver = {
   SomeType: {
     fixedString() {
-      return "fixed.";
-    },
+      return 'fixed.';
+    }
   },
   Query: {
     someType(root, args, ctx) {
       return {testFloat: 303.0303, testInt: 666};
-    },
-  },
+    }
+  }
 };
