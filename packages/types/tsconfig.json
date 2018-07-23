@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+      "declaration": true,
+      "module": "commonjs",
+      "target": "es6",
+      "noImplicitAny": true,
+      "moduleResolution": "node",
+      "outDir": "dist",
+      "baseUrl": ".",
+      "rootDir": "./src",
+      "strict": true
+    },
+    "files": [
+        "src/index.ts"
+    ]
+  }

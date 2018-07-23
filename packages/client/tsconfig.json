@@ -14,7 +14,11 @@
     ],
     "lib": [
       "es2017",
-      "dom"
+      "dom",
+      "esnext.asynciterable"
     ]
-  }
+  },
+  "includes": [
+    "**/@browser/types/**/*.ts"
+  ]
 }

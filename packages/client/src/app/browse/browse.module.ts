@@ -5,17 +5,21 @@ import { BrowseRoutingModule } from './browse-routing.module';
 import { BrowseComponent } from './browse.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule } from '@angular/material';
+import { RouterModule } from '@angular/router';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   imports: [
     CommonModule,
     BrowseRoutingModule,
     LayoutModule,
+    RouterModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatTreeModule
   ],
   declarations: [
     BrowseComponent
