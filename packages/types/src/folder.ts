@@ -1,26 +1,30 @@
-export type FolderItemType = 'folder' | 'file' | null;
+import { TreeItemBase, NormalTreeItem } from './util';
 
-export interface FolderItemBase {
-  id: string;
+export type FileItemType = 'folder' | 'file' | null;
+
+export interface FileItemBase extends TreeItemBase {
   name: string;
-  type: FolderItemType;
+  type: FileItemType;
 }
 
-export interface Folder extends FolderItemBase {
+export interface Folder extends FileItemBase {
   type: 'folder';
-  items: Array<FolderItem>;
+  items: Array<FileItem>;
 }
 
-export interface File extends FolderItemBase {
-  type: 'file'
+export interface File extends FileItemBase {
+  type: 'file';
+  items: null;
 }
 
-export function isFolder (fileItem: FolderItem): fileItem is Folder {
+export function isFolder (fileItem: FileItem): fileItem is Folder {
   return fileItem.type === 'folder';
 }
 
-export function isFile (fileItem: FolderItem): fileItem is File {
+export function isFile (fileItem: FileItem): fileItem is File {
   return (<Folder>fileItem).items === undefined;
 }
 
-export type FolderItem = Folder | File;
+export type FileItem = Folder | File;
+
+export interface NormalFileItem extends NormalTreeItem<FileItem> { }

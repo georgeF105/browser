@@ -1,16 +1,16 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import {graphqlExpress, graphiqlExpress} from 'apollo-server-express';
-import {Schema} from './schema';
+import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
+import { Schema } from './schema';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
-import {persons, findPerson, addPerson} from './data-base/person-database';
-import {getFolderItem} from './data-base/folder-database';
+import { FileItemDatabase } from './data-base/folder-database';
+import { FileItemConnector } from './connector/file-item.connector';
 
 // Default port or given one.
-export const GRAPHQL_ROUTE = "/graphql";
-export const GRAPHIQL_ROUTE = "/graphiql";
+export const GRAPHQL_ROUTE = '/graphql';
+export const GRAPHIQL_ROUTE = '/graphiql';
 
 interface IMainOptions {
   enableCors: boolean;
@@ -20,17 +20,15 @@ interface IMainOptions {
   verbose?: boolean;
 }
 
+const rootFolder = '/home/george/MEDIA';
+const fileItemDatabase = new FileItemDatabase(rootFolder);
+const fileItemConnector = new FileItemConnector (fileItemDatabase);
+
 /* istanbul ignore next: no need to test verbose print */
 function verbosePrint(port, enableGraphiql) {
   console.log(`GraphQL Server is now running on http://localhost:${port}${GRAPHQL_ROUTE}`);
   if (true === enableGraphiql) {
     console.log(`GraphiQL Server is now running on http://localhost:${port}${GRAPHIQL_ROUTE}`);
-  }
-}
-
-export class TestConnector {
-  public get testString() {
-    return "it works from connector as well!";
   }
 }
 
@@ -45,16 +43,11 @@ export function main(options: IMainOptions) {
     app.use(GRAPHQL_ROUTE, cors());
   }
 
-  let testConnector = new TestConnector();
   app.use(GRAPHQL_ROUTE, bodyParser.json(), graphqlExpress({
     context: {
-      testConnector,
-      persons,
-      findPerson,
-      addPerson,
-      findFolderItem: getFolderItem
+      fileItemConnector
     },
-    schema: Schema,
+    schema: Schema
   }));
 
   if (true === options.enableGraphiql) {
@@ -69,7 +62,7 @@ export function main(options: IMainOptions) {
       }
 
       resolve(server);
-    }).on("error", (err: Error) => {
+    }).on('error', (err: Error) => {
       reject(err);
     });
   });
@@ -80,18 +73,18 @@ if (require.main === module) {
   const PORT = parseInt(process.env.PORT || '3000', 10);
 
   // Either to export GraphiQL (Debug Interface) or not.
-  const NODE_ENV = process.env.NODE_ENV !== "production" ? "dev" : "production";
+  const NODE_ENV = process.env.NODE_ENV !== 'production' ? 'dev' : 'production';
 
-  const EXPORT_GRAPHIQL = NODE_ENV !== "production";
+  const EXPORT_GRAPHIQL = NODE_ENV !== 'production';
 
   // Enable cors (cross-origin HTTP request) or not.
-  const ENABLE_CORS = NODE_ENV !== "production";
+  const ENABLE_CORS = NODE_ENV !== 'production';
 
   main({
     enableCors: ENABLE_CORS,
     enableGraphiql: EXPORT_GRAPHIQL,
     env: NODE_ENV,
     port: PORT,
-    verbose: true,
+    verbose: true
   });
 }

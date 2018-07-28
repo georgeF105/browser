@@ -10,16 +10,25 @@ type Query {
     folder(id: String): FolderType
     folders: [FolderType]
 }
+
+type Mutation {
+    newFolder(name: String!, location: String!): FolderType
+}
 `;
 
 export const resolver = {
   Query: {
     folder(root, args, ctx) {
       console.log('HERE');
-      return ctx.findFolderItem(args.id);
+      return ctx.fileItemConnector.getFileItem(args.id);
     },
     folders(root, args, ctx) {
       return ctx.getFolders();
-    },
+    }
+  },
+  Mutation: {
+    newFolder(root, args, ctx) {
+      console.log('new folder', args);
+    }
   }
 };
