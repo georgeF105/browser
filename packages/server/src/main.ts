@@ -5,7 +5,6 @@ import {Schema} from './schema';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
-import {persons, findPerson, addPerson} from './data-base/person-database';
 import {getFolderItem} from './data-base/folder-database';
 
 // Default port or given one.
@@ -28,12 +27,6 @@ function verbosePrint(port, enableGraphiql) {
   }
 }
 
-export class TestConnector {
-  public get testString() {
-    return 'it works from connector as well!';
-  }
-}
-
 export function main(options: IMainOptions) {
   console.log('HERE');
   let app = express();
@@ -46,13 +39,8 @@ export function main(options: IMainOptions) {
     app.use(GRAPHQL_ROUTE, cors());
   }
 
-  let testConnector = new TestConnector();
   app.use(GRAPHQL_ROUTE, bodyParser.json(), graphqlExpress({
     context: {
-      testConnector,
-      persons,
-      findPerson,
-      addPerson,
       findFolderItem: getFolderItem
     },
     schema: Schema

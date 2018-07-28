@@ -3,10 +3,7 @@ import {makeExecutableSchema} from 'graphql-schema-tools';
 
 /* tslint:disable:no-var-requires */
 const modules = [
-  require('./modules/some-type'),
-  require('./modules/person-type'),
-  require('./modules/folder-type'),
-  require('./modules/query')
+  require('./modules/folder-type')
 ];
 
 const mainDefs = [`

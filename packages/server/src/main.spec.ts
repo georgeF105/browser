@@ -1,5 +1,5 @@
-import { GRAPHIQL_ROUTE, GRAPHQL_ROUTE, main, TestConnector} from './main';
-import {get as httpGet, Server} from 'http';
+import { GRAPHIQL_ROUTE, GRAPHQL_ROUTE, main } from './main';
+import { get as httpGet, Server } from 'http';
 import 'jest';
 
 const ERRNO_KEY = 'errno';
@@ -126,16 +126,5 @@ describe('main', () => {
         expect(err[ERRNO_KEY]).toBe('EADDRINUSE');
       });
     });
-  });
-});
-
-describe('TestConnector', () => {
-  it('should pass sanity', () => {
-    expect(typeof TestConnector).toBe('function');
-  });
-
-  it('return string', () => {
-    const tc = new TestConnector();
-    expect(tc.testString).toBe('it works from connector as well!');
   });
 });

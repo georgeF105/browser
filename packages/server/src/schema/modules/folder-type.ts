@@ -10,6 +10,10 @@ type Query {
     folder(id: String): FolderType
     folders: [FolderType]
 }
+
+type Mutation {
+    newFolder(name: String!, location: String!): FolderType
+}
 `;
 
 export const resolver = {
@@ -20,6 +24,11 @@ export const resolver = {
     },
     folders(root, args, ctx) {
       return ctx.getFolders();
+    }
+  },
+  Mutation: {
+    newFolder(root, args, ctx) {
+      console.log('new folder', args);
     }
   }
 };
