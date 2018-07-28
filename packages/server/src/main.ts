@@ -5,7 +5,8 @@ import {Schema} from './schema';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
-import {getFolderItem} from './data-base/folder-database';
+import { FileItemDatabase } from './data-base/folder-database';
+import { FileItemConnector } from './connector/file-item.connector';
 
 // Default port or given one.
 export const GRAPHQL_ROUTE = '/graphql';
@@ -19,6 +20,10 @@ interface IMainOptions {
   verbose?: boolean;
 }
 
+const rootFolder = '/home/george/MEDIA';
+const fileItemDatabase = new FileItemDatabase(rootFolder);
+const fileItemConnector = new FileItemConnector (fileItemDatabase);
+
 /* istanbul ignore next: no need to test verbose print */
 function verbosePrint(port, enableGraphiql) {
   console.log(`GraphQL Server is now running on http://localhost:${port}${GRAPHQL_ROUTE}`);
@@ -28,7 +33,6 @@ function verbosePrint(port, enableGraphiql) {
 }
 
 export function main(options: IMainOptions) {
-  console.log('HERE');
   let app = express();
 
   app.use(helmet());
@@ -41,7 +45,7 @@ export function main(options: IMainOptions) {
 
   app.use(GRAPHQL_ROUTE, bodyParser.json(), graphqlExpress({
     context: {
-      findFolderItem: getFolderItem
+      fileItemConnector
     },
     schema: Schema
   }));
