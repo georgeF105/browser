@@ -1,4 +1,4 @@
-export type ItemKey = string | number;
+export type ItemKey = string;
 
 export interface TreeItemBase {
   id: ItemKey;
