@@ -24,11 +24,16 @@ export class FileItemConnector {
   public getFileItemAsync (filePath: string): AsyncIterator<any> {
     const fileChangeId = `FILE_ITEM_CHANGE-${filePath}`;
 
-    this._fileItemDatabase.watchFileChange(filePath, id => {
+    this._fileItemDatabase.watchFileChange(filePath, filePath => {
+      const fileItem = this.getFileItem(filePath);
       this._pubSub.publish(fileChangeId, {
-        fileItemChanged: {
-          id
-        }
+        fileItemChanged: fileItem
+      });
+    });
+
+    this.getFileItem(filePath).then(fileItem => {
+      this._pubSub.publish(fileChangeId, {
+        fileItemChanged: fileItem
       });
     });
     return this._pubSub.asyncIterator<any>(fileChangeId);

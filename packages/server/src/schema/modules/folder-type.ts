@@ -9,10 +9,6 @@ type FolderType {
     type: String
 }
 
-type FileItemChange {
-  id: String
-}
-
 type Query {
     folder(id: String): FolderType
     folders: [FolderType]
@@ -23,7 +19,7 @@ type Mutation {
 }
 
 type Subscription {
-  fileItemChanged(id: String!): FileItemChange
+  fileItemChanged(id: String!): FolderType
 }
 `;
 

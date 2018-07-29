@@ -28,9 +28,9 @@ interface IMainOptions {
   verbose?: boolean;
 }
 
-export const pubSub = new PubSub();
-
 const rootFolder = '/home/george/MEDIA';
+
+const pubSub = new PubSub();
 const fileItemDatabase = new FileItemDatabase(rootFolder);
 const fileItemConnector = new FileItemConnector (fileItemDatabase, pubSub);
 
@@ -55,8 +55,7 @@ export function main(options: IMainOptions) {
 
   app.use(GRAPHQL_ROUTE, bodyParser.json(), graphqlExpress({
     context: {
-      fileItemConnector,
-      pubSub
+      fileItemConnector
     },
     schema: Schema
   }));
@@ -89,11 +88,7 @@ export function main(options: IMainOptions) {
       execute,
       subscribe,
       schema: Schema,
-      onConnect: (params) => {
-        console.log('on connect', params);
-      },
-      onOperation: (message, params) => {
-        console.log('on operation', message, params);
+      onOperation: (_, params) => {
         return {
           ...params,
           context: {
