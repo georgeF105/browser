@@ -3,7 +3,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { map, tap, filter, switchMapTo } from 'rxjs/operators';
+import { map, filter, switchMapTo } from 'rxjs/operators';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl, CdkTree } from '@angular/cdk/tree';
 import { Folder, FileItem, isFolder } from '@browser/types';
@@ -28,7 +28,7 @@ export class BrowseComponent implements OnInit {
   ) { }
 
   public ngOnInit (): void {
-    this.folderTreeSource$ = this.getFolder('').pipe(
+    this.folderTreeSource$ = this.getFolder('/home').pipe(
       map(response => {
         return [response];
       })
@@ -36,7 +36,7 @@ export class BrowseComponent implements OnInit {
   }
 
   public hasNestedChild = (_: number, folder: Folder) => {
-    const hasNestedChild = isFolder(folder);
+    const hasNestedChild = folder && isFolder(folder);
     return hasNestedChild;
   }
 

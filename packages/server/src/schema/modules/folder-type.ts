@@ -1,6 +1,3 @@
-import { PubSub } from 'graphql-subscriptions';
-import { FILE_ITEM_CHANGE } from '../../connector/file-item.connector';
-
 export const typeDef = `
 type FolderType {
     id: String
@@ -25,15 +22,15 @@ type Subscription {
 
 export const resolver = {
   Query: {
-    folder(root, args, ctx) {
+    folder(args, ctx) {
       return ctx.fileItemConnector.getFileItem(args.id);
     },
-    folders(root, args, ctx) {
+    folders(ctx) {
       return ctx.getFolders();
     }
   },
   Mutation: {
-    newFolder(root, args, ctx) {
+    newFolder(args) {
       console.log('new folder', args);
     }
   }

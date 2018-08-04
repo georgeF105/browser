@@ -28,9 +28,7 @@ interface IMainOptions {
   verbose?: boolean;
 }
 
-const rootFolder = '/home/george/MEDIA';
-
-const fileItemDatabase = new FileItemDatabase(rootFolder);
+const fileItemDatabase = new FileItemDatabase();
 const fileItemConnector = new FileItemConnector (fileItemDatabase);
 
 /* istanbul ignore next: no need to test verbose print */
