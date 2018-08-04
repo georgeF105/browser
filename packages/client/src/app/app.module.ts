@@ -12,6 +12,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApolloModule, Apollo } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
 import { NgrxCacheModule, NgrxCache } from 'apollo-angular-cache-ngrx';
+import { split } from 'apollo-link';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
+import { OperationDefinitionNode } from 'graphql';
 
 @NgModule({
   declarations: [
@@ -37,11 +41,30 @@ export class AppModule {
     httpLink: HttpLink,
     ngrxCache: NgrxCache
   ) {
+
+    const ws = new WebSocketLink({
+      uri: `ws://localhost:3000/subscriptions`,
+      options: {
+        reconnect: true
+      }
+    });
+
+    const http = httpLink.create({
+      uri: environment.graphqlUri
+    });
+
+    const link = split(
+      ({ query }) => {
+        const { kind, operation } = <OperationDefinitionNode>getMainDefinition(query);
+        return kind === 'OperationDefinition' && operation === 'subscription';
+      },
+      ws,
+      http,
+    );
+
     apollo.create({
-      link: httpLink.create({
-        uri: environment.graphqlUri
-      }),
+      link,
       cache: ngrxCache.create()
-    })
+    });
   }
 }

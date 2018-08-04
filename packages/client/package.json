@@ -31,10 +31,12 @@
     "apollo-angular-cache-ngrx": "^1.0.0-beta.2",
     "apollo-angular-link-http": "^1.1.1",
     "apollo-client": "^2.3.5",
+    "apollo-link-ws": "^1.0.8",
     "core-js": "^2.5.4",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.9.2",
     "rxjs": "^6.2.1",
+    "subscriptions-transport-ws": "^0.9.14",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
