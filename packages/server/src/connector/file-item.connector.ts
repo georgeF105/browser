@@ -2,41 +2,34 @@ import { FileItem, isFolder, Folder, File, NormalFileItem } from '../../../types
 import * as path from 'path';
 import { FileItemDatabase } from '../data-base/folder-database';
 import { PubSub } from 'graphql-subscriptions';
+import asyncify from 'callback-to-async-iterator';
 
 export const FILE_ITEM_CHANGE = 'FILE_ITEM_CHANGE';
 
 export class FileItemConnector {
-  private _normalFileItems: { [key: string]: NormalFileItem } = {};
-
   constructor (
-    private _fileItemDatabase: FileItemDatabase,
-    private _pubSub: PubSub
-  ) {
-    this._fileItemDatabase.watchFileChange('', id => {
-      this._pubSub.publish(FILE_ITEM_CHANGE, {
-        fileItemChanged: {
-          id
-        }
-      });
-    });
-  }
+    private _fileItemDatabase: FileItemDatabase
+  ) { }
 
   public getFileItemAsync (filePath: string): AsyncIterator<any> {
-    const fileChangeId = `FILE_ITEM_CHANGE-${filePath}`;
-
-    this._fileItemDatabase.watchFileChange(filePath, filePath => {
-      const fileItem = this.getFileItem(filePath);
-      this._pubSub.publish(fileChangeId, {
-        fileItemChanged: fileItem
+    const fileChanges = (callback) => {
+      this.getFileItem(filePath).then(fileItem => {
+        callback({
+          fileItemChanged: fileItem
+        });
       });
-    });
 
-    this.getFileItem(filePath).then(fileItem => {
-      this._pubSub.publish(fileChangeId, {
-        fileItemChanged: fileItem
-      });
+      return Promise.resolve(this._fileItemDatabase.watchFileChange(filePath, filePath => {
+        const fileItem = this.getFileItem(filePath);
+        callback({
+          fileItemChanged: fileItem
+        });
+      }));
+    };
+
+    return asyncify(fileChanges, {
+      onClose: connection => connection.close()
     });
-    return this._pubSub.asyncIterator<any>(fileChangeId);
   }
 
   public getFileItem (filePath: string): Promise<FileItem> {

@@ -26,7 +26,6 @@ type Subscription {
 export const resolver = {
   Query: {
     folder(root, args, ctx) {
-      console.log('HERE');
       return ctx.fileItemConnector.getFileItem(args.id);
     },
     folders(root, args, ctx) {

@@ -3,17 +3,10 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { map, tap, switchMap, startWith, filter } from 'rxjs/operators';
+import { map, tap, filter, switchMapTo } from 'rxjs/operators';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl, CdkTree } from '@angular/cdk/tree';
 import { Folder, FileItem, isFolder } from '@browser/types';
-
-const LOADING_FOLDER: Folder = {
-  id: null,
-  name: 'Loading...',
-  type: 'folder',
-  items: []
-};
 
 @Component({
   selector: 'app-browse',
@@ -51,12 +44,13 @@ export class BrowseComponent implements OnInit {
   private getFolderChildren (folder: Folder): Observable<FileItem[]> {
     return this.folderTreeControl.expansionModel.onChange.pipe(
       filter(() => this.folderTreeControl.isExpanded(folder)),
-      switchMap(() => this.getFolder(folder.id)),
+      switchMapTo(this.getFolder(folder.id)),
       map((_folder: Folder) => _folder && _folder.items || [])
     );
   }
 
   private getFolder (id: string): Observable<Folder> {
+    console.log('getting folder', id);
     return this.apollo.subscribe({
       query: gql`
         subscription {
@@ -72,6 +66,7 @@ export class BrowseComponent implements OnInit {
           }
       }`
     }).pipe(
+      tap(results => console.log('results', results)),
       map(results => results.data.fileItemChanged)
     );
   }
