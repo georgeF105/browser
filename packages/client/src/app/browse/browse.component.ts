@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
@@ -24,8 +24,7 @@ export class BrowseComponent implements OnInit {
 
   constructor(
     private apollo: Apollo,
-    private breakpointObserver: BreakpointObserver,
-    private changeDetectorRef: ChangeDetectorRef
+    private breakpointObserver: BreakpointObserver
   ) { }
 
   public ngOnInit (): void {
@@ -50,7 +49,6 @@ export class BrowseComponent implements OnInit {
   }
 
   private getFolder (id: string): Observable<Folder> {
-    console.log('getting folder', id);
     return this.apollo.subscribe({
       query: gql`
         subscription {
@@ -66,12 +64,11 @@ export class BrowseComponent implements OnInit {
           }
       }`
     }).pipe(
-      tap(results => console.log('results', results)),
       map(results => results.data.fileItemChanged)
     );
   }
 
-  public trackByFolderId (index: number, folder: Folder): string {
+  public trackByFolderId (folder: Folder): string {
     return folder.id + folder.name;
   }
 }
