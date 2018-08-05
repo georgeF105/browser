@@ -1,6 +1,7 @@
 import { FileItem, isFolder, FileItemType, Folder } from '../../../types/dist';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as nodeWatch from 'node-watch';
 
 export class FileItemDatabase {
   public getFileItem (filePath: string): Promise<FileItem> {
@@ -86,7 +87,8 @@ export class FileItemDatabase {
   }
 
   public watchFileChange (filePath: string, listener: (id: string) => void): fs.FSWatcher {
-    return fs.watch(filePath, {}, () => {
+    return nodeWatch(filePath, { recursive: true, delay: 50 }, (event, name) => {
+      console.log('file change', event, name);
       listener(filePath);
     });
   }
