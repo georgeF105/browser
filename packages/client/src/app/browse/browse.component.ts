@@ -37,7 +37,7 @@ export class BrowseComponent implements OnInit {
     );
 
     this.folderTreeSource$ = path$.pipe(
-      switchMap(path => this.getFolder(path)),
+      switchMap(path => this.getFolderLive(path)),
       map(response => [response])
     );
 
@@ -69,7 +69,7 @@ export class BrowseComponent implements OnInit {
     );
   }
 
-  private getFolder (id: string): Observable<Folder> {
+  private getFolderLive (id: string): Observable<Folder> {
     return this.apollo.subscribe({
       query: gql`
         subscription {
@@ -86,6 +86,25 @@ export class BrowseComponent implements OnInit {
       }`
     }).pipe(
       map(results => results.data.fileItemChanged)
+    );
+  }
+
+  private getFolder (id: string): Observable<Folder> {
+    return this.apollo.query<{ folder: Folder }>({
+      query: gql`{
+          folder (id: "${id}") {
+            id
+            name
+            type
+            items {
+              id
+              name
+              type
+            }
+          }
+      }`
+    }).pipe(
+      map(results => results.data.folder)
     );
   }
 

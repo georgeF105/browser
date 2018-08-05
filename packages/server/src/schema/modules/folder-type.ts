@@ -22,7 +22,7 @@ type Subscription {
 
 export const resolver = {
   Query: {
-    folder(args, ctx) {
+    folder(_, args, ctx) {
       return ctx.fileItemConnector.getFileItem(args.id);
     },
     folders(ctx) {

@@ -86,7 +86,7 @@ export class FileItemDatabase {
   }
 
   public watchFileChange (filePath: string, listener: (id: string) => void): fs.FSWatcher {
-    return fs.watch(filePath, {}, (event, fileName) => {
+    return fs.watch(filePath, {}, () => {
       listener(filePath);
     });
   }

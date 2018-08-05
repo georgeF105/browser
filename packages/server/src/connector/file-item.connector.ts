@@ -5,11 +5,14 @@ import asyncify from 'callback-to-async-iterator';
 export const FILE_ITEM_CHANGE = 'FILE_ITEM_CHANGE';
 
 export class FileItemConnector {
+  private _socketCount = 0;
   constructor (
     private _fileItemDatabase: FileItemDatabase
   ) { }
 
   public getFileItemAsync (filePath: string): AsyncIterator<any> {
+    this._socketCount++;
+    console.log('new socket', filePath, 'count', this._socketCount);
     const fileChanges = (callback) => {
       this.getFileItem(filePath).then(fileItem => {
         callback({
@@ -26,7 +29,10 @@ export class FileItemConnector {
     };
 
     return asyncify(fileChanges, {
-      onClose: connection => connection.close()
+      onClose: connection => {
+        this._socketCount--;
+        connection.close();
+      }
     });
   }
 
