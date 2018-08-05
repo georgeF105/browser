@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { BrowseComponent } from './browse.component';
+import { browseUrlMatcher } from './browse.url-matcher.';
 
 const routes: Routes = [
   {
-    path: '',
+    matcher: browseUrlMatcher,
     component: BrowseComponent
   }
 ];

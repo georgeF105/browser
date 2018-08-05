@@ -1,7 +1,5 @@
-import { FileItem, isFolder, Folder, File, NormalFileItem } from '../../../types/dist';
-import * as path from 'path';
+import { FileItem } from '../../../types/dist';
 import { FileItemDatabase } from '../data-base/folder-database';
-import { PubSub } from 'graphql-subscriptions';
 import asyncify from 'callback-to-async-iterator';
 
 export const FILE_ITEM_CHANGE = 'FILE_ITEM_CHANGE';

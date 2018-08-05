@@ -21,7 +21,20 @@
       </button>
       <span>Browse</span>
     </mat-toolbar>
-
+    
+  <div
+    *ngIf="breadcrumbs$ | async as breadcrumbs">
+    <span
+      *ngFor="let breadcrumb of breadcrumbs; first as isFirst">
+      <span
+        *ngIf="!isFirst">/</span>
+      <a
+        mat-button
+        [routerLink]="breadcrumb.path">
+        {{ breadcrumb.name }}
+      </a>
+    </span>
+  </div>
   <mat-tree
     #folderTree
     [dataSource]="folderTreeSource$"
@@ -32,8 +45,17 @@
       *matTreeNodeDef="let node"
       matTreeNodeToggle>
       <li class="mat-tree-node">
-        <button mat-icon-button disabled></button>
-          {{node.name}}
+        <button mat-icon-button disabled>
+          <mat-icon class="mat-icon-rtl-mirror">
+            insert_drive_file
+          </mat-icon>
+        </button>
+        <a
+            mat-stroked-button
+            routerLink=""
+            [queryParams]="{ file: node.id }">
+            {{node.name}}
+          </a>
       </li>
     </mat-tree-node>
     <mat-nested-tree-node
@@ -43,10 +65,14 @@
           <button mat-icon-button matTreeNodeToggle
                   [attr.aria-label]="'toggle ' + node.filename">
             <mat-icon class="mat-icon-rtl-mirror">
-              {{folderTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              {{folderTreeControl.isExpanded(node) ? 'folder_open' : 'folder'}}
             </mat-icon>
           </button>
-          {{node.name}}
+          <a
+            mat-stroked-button
+            [routerLink]="getFileItemPath(node)">
+            {{node.name}}
+          </a>
         </div>
         <ul
           [class.folder-tree-invisible]="!folderTreeControl.isExpanded(node)">

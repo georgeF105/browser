@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
-import { map, tap, filter, switchMapTo } from 'rxjs/operators';
+import { map, filter, switchMapTo, switchMap, tap } from 'rxjs/operators';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl, CdkTree } from '@angular/cdk/tree';
 import { Folder, FileItem, isFolder } from '@browser/types';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-browse',
@@ -20,24 +21,43 @@ export class BrowseComponent implements OnInit {
   public folderTreeSource = new MatTreeNestedDataSource();
   public folderTreeSource$: Observable<Array<Folder>>;
 
+  public breadcrumbs$: Observable<Array<{ name: string, path: Array<string> }>>;
+
   @ViewChild('folderTree') folderTree: CdkTree<FileItem>;
 
   constructor(
     private apollo: Apollo,
-    private breakpointObserver: BreakpointObserver,
-    private changeDetectorRef: ChangeDetectorRef
+    private _activateRoute: ActivatedRoute,
+    private breakpointObserver: BreakpointObserver
   ) { }
 
   public ngOnInit (): void {
-    this.folderTreeSource$ = this.getFolder('').pipe(
-      map(response => {
-        return [response];
+    const path$ = this._activateRoute.params.pipe(
+      map(params => `/${params.path}`)
+    );
+
+    this.folderTreeSource$ = path$.pipe(
+      switchMap(path => this.getFolder(path)),
+      map(response => [response])
+    );
+
+    this.breadcrumbs$ = path$.pipe(
+      map((path: string) => {
+        return path.split('/')
+          .filter(Boolean)
+          .reduce((breadcrumbs, segment) => {
+            breadcrumbs.push({
+              name: segment,
+              path: ['/browse', ...breadcrumbs.map(breadcrumb => breadcrumb.name), segment]
+            });
+            return breadcrumbs;
+          }, []);
       })
     );
   }
 
   public hasNestedChild = (_: number, folder: Folder) => {
-    const hasNestedChild = isFolder(folder);
+    const hasNestedChild = folder && isFolder(folder);
     return hasNestedChild;
   }
 
@@ -50,7 +70,6 @@ export class BrowseComponent implements OnInit {
   }
 
   private getFolder (id: string): Observable<Folder> {
-    console.log('getting folder', id);
     return this.apollo.subscribe({
       query: gql`
         subscription {
@@ -66,12 +85,18 @@ export class BrowseComponent implements OnInit {
           }
       }`
     }).pipe(
-      tap(results => console.log('results', results)),
       map(results => results.data.fileItemChanged)
     );
   }
 
   public trackByFolderId (index: number, folder: Folder): string {
-    return folder.id + folder.name;
+    return folder.id;
+  }
+
+  public getFileItemPath (fileItem: FileItem): Array<string> {
+    return [
+      '/browse',
+      ...fileItem.id.split('/').filter(Boolean)
+    ];
   }
 }
