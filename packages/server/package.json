@@ -47,12 +47,15 @@
     "@types/morgan": "^1.7.35",
     "apollo-server-express": "^1.2.0",
     "body-parser": "^1.18.2",
+    "callback-to-async-iterator": "^1.1.1",
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "graphql": "0.11.7",
     "graphql-schema-tools": "^0.0.6",
+    "graphql-subscriptions": "^0.5.8",
     "helmet": "^3.9.0",
-    "morgan": "^1.9.0"
+    "morgan": "^1.9.0",
+    "subscriptions-transport-ws": "^0.9.14"
   },
   "devDependencies": {
     "@types/graphql": "^0.11.5",

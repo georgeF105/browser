@@ -1,5 +1,4 @@
 <mat-sidenav-container
-  *ngIf="folderResponse$ | async as folder"
   class="sidenav-container">
   <mat-sidenav
     #drawer
@@ -9,15 +8,6 @@
     [mode]="(isHandset | async)!.matches ? 'over' : 'side'"
     [opened]="!(isHandset | async)!.matches">
     <mat-toolbar color="primary">Menu</mat-toolbar>
-    <mat-nav-list>
-      <a
-        *ngFor="let folder of folder?.items"
-        mat-list-item
-        routerLink="."
-        [queryParams]="{ folder: folder.id }">
-          {{ folder.name }}
-    </a>
-    </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
@@ -34,7 +24,7 @@
 
   <mat-tree
     #folderTree
-    [dataSource]="folderTreeSource"
+    [dataSource]="folderTreeSource$"
     [treeControl]="folderTreeControl"
     [trackBy]="trackByFolderId"
     class="folder-tree">

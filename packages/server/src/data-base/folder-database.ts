@@ -84,4 +84,11 @@ export class FileItemDatabase {
       });
     });
   }
+
+  public watchFileChange (filePath: string, listener: (id: string) => void): fs.FSWatcher {
+    const fullPath = path.join(this._rootFolder, filePath);
+    return fs.watch(fullPath, {}, (event, fileName) => {
+      listener(filePath);
+    });
+  }
 }
