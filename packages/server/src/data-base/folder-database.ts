@@ -1,7 +1,6 @@
-import { FileItem, isFolder, FileItemType, Folder } from '../../../types/dist';
+import { FileItem, isFolder, Folder } from '../../../types/dist';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as nodeWatch from 'node-watch';
 
 export class FileItemDatabase {
   public getFileItem (filePath: string): Promise<FileItem> {
