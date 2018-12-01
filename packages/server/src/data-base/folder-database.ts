@@ -87,7 +87,7 @@ export class FileItemDatabase {
   }
 
   public watchFileChange (filePath: string, listener: (id: string) => void): fs.FSWatcher {
-    return nodeWatch(filePath, { recursive: true, delay: 50 }, (event, name) => {
+    return fs.watch(filePath, (event, name) => {
       console.log('file change', event, name);
       listener(filePath);
     });
