@@ -69,7 +69,7 @@ export class BrowseComponent implements OnInit {
     );
   }
 
-  private getFolder (id: string): Observable<Folder> {
+  private getFolderLive (id: string): Observable<Folder> {
     return this.apollo.subscribe({
       query: gql`
         subscription {
@@ -86,6 +86,31 @@ export class BrowseComponent implements OnInit {
       }`
     }).pipe(
       map(results => results.data.fileItemChanged)
+    );
+  }
+
+  private getFolder (id: string): Observable<Folder> {
+    return this.apollo.watchQuery<{ folder: Folder }>({
+      query: gql`
+        query folder ($id: String!) {
+          folder (id: $id) {
+            id
+            name
+            type
+            items {
+              id
+              name
+              type
+            }
+          }
+        }
+      `,
+      variables: {
+        id
+      }
+    }).valueChanges.pipe(
+      tap(r => console.log('result', r)),
+      map(results => results.data.folder)
     );
   }
 

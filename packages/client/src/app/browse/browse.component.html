@@ -24,10 +24,15 @@
     
   <div
     *ngIf="breadcrumbs$ | async as breadcrumbs">
+    <span>
+      <a
+        mat-button
+        routerLink="/browse">
+        root
+      </a>
+    </span>
     <span
       *ngFor="let breadcrumb of breadcrumbs; first as isFirst">
-      <span
-        *ngIf="!isFirst">/</span>
       <a
         mat-button
         [routerLink]="breadcrumb.path">
@@ -51,7 +56,7 @@
           </mat-icon>
         </button>
         <a
-            mat-stroked-button
+            mat-button
             routerLink=""
             [queryParams]="{ file: node.id }">
             {{node.name}}
@@ -65,11 +70,11 @@
           <button mat-icon-button matTreeNodeToggle
                   [attr.aria-label]="'toggle ' + node.filename">
             <mat-icon class="mat-icon-rtl-mirror">
-              {{folderTreeControl.isExpanded(node) ? 'folder_open' : 'folder'}}
+              {{folderTreeControl.isExpanded(node) ? 'folder_open' : 'create_new_folder'}}
             </mat-icon>
           </button>
           <a
-            mat-stroked-button
+            mat-button
             [routerLink]="getFileItemPath(node)">
             {{node.name}}
           </a>

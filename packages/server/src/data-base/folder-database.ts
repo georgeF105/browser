@@ -1,4 +1,4 @@
-import { FileItem, isFolder, FileItemType, Folder } from '../../../types/dist';
+import { FileItem, isFolder, Folder } from '../../../types/dist';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -86,7 +86,8 @@ export class FileItemDatabase {
   }
 
   public watchFileChange (filePath: string, listener: (id: string) => void): fs.FSWatcher {
-    return fs.watch(filePath, {}, (event, fileName) => {
+    return fs.watch(filePath, (event, name) => {
+      console.log('file change', event, name);
       listener(filePath);
     });
   }
